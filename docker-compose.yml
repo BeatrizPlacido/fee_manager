@@ -1,0 +1,35 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres
+    container_name: postgres-container
+    environment:
+      POSTGRES_USER: beatriz
+      POSTGRES_PASSWORD: dev123
+    ports:
+      - '5432:5432'
+    volumes:
+      - './data/postgres:/var/lib/postgresql/data'
+    networks:
+      - compose-network
+
+  rails:
+    build: .
+    container_name: 'rails-container'
+    command: bundle exec rails s -p 3000 -b '0.0.0.0'
+    volumes:
+      - .:/fee_manager
+    ports:
+      - '3000:3000'
+    depends_on:
+      - db
+    networks:
+      - compose-network
+    environment:
+      POSTGRES_USER: beatriz
+      POSTGRES_PASSWORD: dev123
+      POSTGRES_HOST: db
+networks:
+  compose-network:
+    driver: bridge

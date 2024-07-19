@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  amount: 1
+  due_date: 2024-07-18
+  status: MyString
+
+two:
+  amount: 1
+  due_date: 2024-07-18
+  status: MyString
