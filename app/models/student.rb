@@ -5,35 +5,26 @@ class Student < ApplicationRecord
   validates :cpf, presence: true, uniqueness: true
   validates :payment_method, presence: true, inclusion: { in: PAYMENT_METHODS }
 
-  before_validation :cpf_is_valid?
+  before_validation :validate!
 
   private
 
-  def cpf_is_valid?
-    first_verifying_digit(format_cpf) == format_cpf[-2] && second_verifying_digit(format_cpf) == format_cpf[-1]
+  def validate!
+    raise ArgumentError, "CPF informado é inválido" unless valid_cpf?
   end
 
-  def format_cpf
-    @format_cpf ||= cpf.gsub('.', '').gsub('-', '').chars.map{ |char| char.to_i }
+  def valid_cpf?
+    verifying_digit(9, 10) == formated_cpf[-2] && verifying_digit(10, 11) == formated_cpf[-1]
   end
 
-  def first_verifying_digit(format_cpf)
-    aux = 10
+  def formated_cpf
+    @formated_cpf ||= cpf.gsub('.', '').gsub('-', '').chars.map{ |char| char.to_i }
+  end
+
+  def verifying_digit(qtd_digt, aux)
     result = 0
 
-    format_cpf.slice(0, 9).each do |digit|
-      result += digit * aux
-      aux -= 1
-    end
-
-    (result % 11) < 2 ? 0 : 11 - (result % 11)
-  end
-
-  def second_verifying_digit(format_cpf)
-    aux = 11
-    result = 0
-
-    format_cpf.slice(0, 10).each do |digit|
+    formated_cpf.slice(0, qtd_digt).each do |digit|
       result += digit * aux
       aux -= 1
     end
