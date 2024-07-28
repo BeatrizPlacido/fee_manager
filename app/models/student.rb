@@ -1,6 +1,8 @@
 class Student < ApplicationRecord
   PAYMENT_METHODS = %w[credit_card boleto].freeze
 
+  has_many :enrollments, dependent: :destroy
+
   validates :name, presence: true
   validates :cpf, presence: true, uniqueness: true
   validates :payment_method, presence: true, inclusion: { in: PAYMENT_METHODS }
