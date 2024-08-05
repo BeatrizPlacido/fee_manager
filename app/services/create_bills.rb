@@ -11,9 +11,7 @@ class CreateBills
   def perform
     validate!
 
-    ActiveRecord::Base.transaction do
-      create_bills
-    end
+    create_bills
   end
 
   private
