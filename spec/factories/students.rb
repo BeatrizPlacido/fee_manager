@@ -1,8 +1,8 @@
 FactoryBot.define do
   factory :student do
 
-    name { 'Student Name' }
-    cpf { '476.623.748-07' }
+    name { Faker::Name.name }
+    cpf { Faker::CPF.pretty }
 
     trait :card do
       payment_method { 'credit_card' }
