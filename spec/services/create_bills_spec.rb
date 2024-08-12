@@ -1,6 +1,3 @@
-require 'rails_helper'
-require_relative '../../app/services/create_bills'
-
 RSpec.describe CreateBills do
   describe '.perform' do
     let(:amount) { 1200 }
