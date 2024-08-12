@@ -9,15 +9,23 @@ class CreateBills
   end
 
   def perform
+    validate!
+
     create_bills
   end
 
   private
 
-  attr_reader :amount, :installments
+  attr_reader :amount, :installments, :due_day
+
+  def validate!
+    raise ArgumentError, 'amount must be valid' if amount <= 0
+    raise ArgumentError, 'installments must be valid' if installments <= 0
+    raise ArgumentError, 'due_day must be valid' if due_day < 1 || due_day > 31
+  end
 
   def create_bills
-    @index = current_date.day > @due_day ? 1 : 0
+    @index = current_date.day > due_day ? 1 : 0
 
     installments.times do
       Bill.create!(
@@ -46,6 +54,6 @@ class CreateBills
   end
 
   def day(date)
-    Date.valid_date?(date.year, date.month, @due_day) ? @due_day : -1
+    Date.valid_date?(date.year, date.month, due_day) ? due_day : -1
   end
 end

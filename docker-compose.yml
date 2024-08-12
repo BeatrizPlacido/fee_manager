@@ -10,7 +10,7 @@ services:
     ports:
       - '5432:5432'
     volumes:
-      - './data/postgres:/var/lib/postgresql/data'
+      - fee-manager-volume:/var/lib/postgresql/data:Z
     networks:
       - compose-network
 
@@ -33,3 +33,7 @@ services:
 networks:
   compose-network:
     driver: bridge
+
+volumes:
+  fee-manager-volume:
+    external: true

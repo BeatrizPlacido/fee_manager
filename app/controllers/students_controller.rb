@@ -1,11 +1,36 @@
 class StudentsController < ApplicationController
+  include ActionController::HttpAuthentication::Basic::ControllerMethods
+
   before_action :set_student, only: %i[ show update destroy ]
 
-  # GET /students
-  def index
-    @students = Student.all
+  http_basic_authenticate_with(
+    name: ENV['BASIC_AUTH_NAME'],
+    password: ENV['BASIC_AUTH_PASSWORD'],
+    only: %i[ destroy ]
+  )
 
-    render json: @students
+  # GET /students?page=1&count=2
+  def index
+    page = (params[:page] || 1).to_i
+    count = (params[:count] || 10).to_i
+    offset = (page - 1) * count
+
+    @students_list = Student.offset(offset).limit(count)
+    @students = @students_list.map do |student|
+      {
+        "id": student.id,
+        "name": student.name,
+        "cpf": student.cpf,
+        "birthdate": student.birthdate,
+        "payment_method": student.payment_method
+      }
+    end
+
+    render json: {
+      page: page,
+      count: count,
+      items: @students
+    }
   end
 
   # GET /students/1
@@ -18,7 +43,7 @@ class StudentsController < ApplicationController
     @student = Student.new(student_params)
 
     if @student.save
-      render json: @student, status: :created, location: @student
+      render json: { id: @student.id }
     else
       render json: @student.errors, status: :unprocessable_entity
     end
