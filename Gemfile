@@ -8,7 +8,6 @@ gem 'aasm', '~> 5.1', '>= 5.1.1'
 gem 'bootsnap', require: false
 gem 'cpf_faker'
 gem 'faker'
-gem 'kaminari', '~> 1.2'
 gem 'pg'
 gem 'puma', '>= 5.0'
 
