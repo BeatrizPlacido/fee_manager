@@ -1,5 +1,13 @@
 class StudentsController < ApplicationController
+  include ActionController::HttpAuthentication::Basic::ControllerMethods
+
   before_action :set_student, only: %i[ show update destroy ]
+
+  http_basic_authenticate_with(
+    name: ENV['BASIC_AUTH_NAME'],
+    password: ENV['BASIC_AUTH_PASSWORD'],
+    only: %i[ destroy ]
+  )
 
   # GET /students?page=1&count=2
   def index

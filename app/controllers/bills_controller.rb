@@ -1,5 +1,13 @@
 class BillsController < ApplicationController
+  include ActionController::HttpAuthentication::Basic::ControllerMethods
+
   before_action :set_bill, only: %i[ show update destroy ]
+
+  http_basic_authenticate_with(
+    name: ENV['BASIC_AUTH_NAME'],
+    password: ENV['BASIC_AUTH_PASSWORD'],
+    only: %i[ destroy ]
+  )
 
   # GET /bills
   def index
